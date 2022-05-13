@@ -356,6 +356,9 @@ cfi="false"
 # 4. Detection partly done in configure
 xen=${default_feature:+disabled}
 
+# ffgpu support
+ffgpu="no"
+
 # parse CC options second
 for opt do
   optarg=$(expr "x$opt" : 'x[^=]*=\(.*\)')
@@ -1038,6 +1041,10 @@ for opt do
   ;;
   --disable-gio) gio=no
   ;;
+  --enable-ffgpu) ffgpu=yes
+  ;;
+  --disable-ffgpu) ffgpu=no
+  ;;
   # backwards compatibility options
   --enable-trace-backend=*) meson_option_parse "--enable-trace-backends=$optarg" "$optarg"
   ;;
@@ -1266,6 +1273,7 @@ cat << EOF
   vhost-vdpa      vhost-vdpa kernel backend support
   opengl          opengl support
   gio             libgio support
+  ffgpu           ffgpu support
 
 NOTE: The object files are built at the place where configure is launched
 EOF
@@ -3010,6 +3018,10 @@ fi
 
 if test "$safe_stack" = "yes"; then
   echo "CONFIG_SAFESTACK=y" >> $config_host_mak
+fi
+
+if test "$ffgpu" = "yes"; then
+  echo "CONFIG_FFGPU=y" >> $config_host_mak
 fi
 
 # If we're using a separate build tree, set it up now.
